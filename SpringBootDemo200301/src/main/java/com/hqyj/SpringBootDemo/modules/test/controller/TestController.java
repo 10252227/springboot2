@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hqyj.SpringBootDemo.modules.test.vo.applicationTest;
 
 @Controller
+@RequestMapping("/test")
 public class TestController {
 	
 	@Value("${com.test.name}")
@@ -29,9 +30,9 @@ public class TestController {
 	
 	/**
 	 * 
-	 * 127.0.0.1:8080/test/log
+	 * 127.0.0.1/test/log
 	 */
-	@RequestMapping("/test/log")
+	@RequestMapping("/log")
 	@ResponseBody
 	public String logTest(){
 		// TRACE<DEBUG<INFO<WARN<ERROR
@@ -45,9 +46,9 @@ public class TestController {
 	
 	/**
 	 * 
-	 *127.0.0.1:8080/test/config
+	 *127.0.0.1/test/config
 	 */
-	@RequestMapping("/test/config")
+	@RequestMapping("/config")
 	@ResponseBody
 	public String configInfo(){
 		StringBuffer sb = new StringBuffer();
@@ -67,9 +68,9 @@ public class TestController {
 	
 	/**
 	 * 
-	 *127.0.0.1:8080/test/desc
+	 *127.0.0.1/test/desc
 	 */
-	@RequestMapping("/test/desc")
+	@RequestMapping("/desc")
 	@ResponseBody    
 	public String testDesc(){
 		return "this is test modules desc.";
