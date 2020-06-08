@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.ModelAndView;
 
 @WebFilter(filterName = "ParameterFilter", urlPatterns = "/**")
 public class ParameterFilter implements Filter {
@@ -41,7 +42,7 @@ public class ParameterFilter implements Filter {
 				}
 				return super.getParameter(name);
 			}
-
+			
 			@Override
 			public String[] getParameterValues(String name) {
 				String[] values = httpRequest.getParameterValues(name);
