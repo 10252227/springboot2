@@ -45,6 +45,9 @@ public class TestController {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 	
+	/**
+	 * 127.0.0.1/test/index
+	 */
 	@RequestMapping("/index")
 	public String indexPage(ModelMap modelMap){
 		int countryId = 522;
@@ -63,7 +66,7 @@ public class TestController {
 		modelMap.addAttribute("country", country);
 		modelMap.addAttribute("cities", cities);
 		modelMap.addAttribute("updateCityUri", "/api/city");
-		modelMap.addAttribute("template", "test/index");
+//		modelMap.addAttribute("template", "test/index");
 		return "index";
 	}
 	
