@@ -1,7 +1,9 @@
 package com.hqyj.SpringBootDemo.modules.test.controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -13,8 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hqyj.SpringBootDemo.config.ResourceConfigBean;
 import com.hqyj.SpringBootDemo.modules.test.entity.City;
 import com.hqyj.SpringBootDemo.modules.test.entity.Country;
 import com.hqyj.SpringBootDemo.modules.test.service.CityService;
@@ -49,6 +57,8 @@ public class TestController {
 	private CityService cityService;
 	@Autowired
 	private CountryService countryService;
+	@Autowired
+	private ResourceConfigBean resourceConfigBean;
 	
 	/**
 	 * 127.0.0.1/test/index
@@ -66,8 +76,7 @@ public class TestController {
 		modelMap.addAttribute("changeType", "checkbox");
 		modelMap.addAttribute("baiduUrl", "/test/log");
 		modelMap.addAttribute("city", cities.get(0));
-		modelMap.addAttribute("shopLogo", 
-				"/upload/1111.png");
+		modelMap.addAttribute("shopLogo", "/upload/1111.png");
 		modelMap.addAttribute("country", country);
 		modelMap.addAttribute("cities", cities);
 		modelMap.addAttribute("updateCityUri", "/api/city");
@@ -132,11 +141,9 @@ public class TestController {
 			redirectAttributes.addFlashAttribute("message","plase select file");
 			return "redirect:/test/index";
 		}
-		String resourcePath = "/upload/" + file.getOriginalFilename();
-		String destFilePath = "D:" + resourcePath;
+		String resourcePath = resourceConfigBean.getResourcePath()+file.getOriginalFilename();
 		try {
-//			String destFilePath = "D:\\upload\\"+file.getOriginalFilename();
-			File destFile = new File(destFilePath);
+			File destFile = new File(ResourceUtils.getURL(resourcePath).getPath());
 			file.transferTo(destFile);
 		} catch (IllegalStateException  | IOException e) {
 			e.printStackTrace();
@@ -157,7 +164,6 @@ public class TestController {
 			}
 			
 			try {
-//				String destFilePath = "D:\\upload\\" + file.getOriginalFilename();
 				String destFilePath = "D:\\upload" + File.separator + file.getOriginalFilename();
 				File destFile = new File(destFilePath);
 				file.transferTo(destFile);
@@ -175,5 +181,24 @@ public class TestController {
 			redirectAttributes.addFlashAttribute("message","upload success");
 		}
 		return "redirect:/test/index";
+	}
+	
+	@RequestMapping("/download")
+	@ResponseBody
+	public ResponseEntity<Resource> download(@RequestParam String fileName) {
+
+		try {
+			String resourcePath = resourceConfigBean.getResourcePath() + fileName;
+			Resource resource = new UrlResource(ResourceUtils.getURL(resourcePath));
+
+			return ResponseEntity.ok()
+					.header(HttpHeaders.CONTENT_TYPE, "application/octet-stream")
+					.header(HttpHeaders.CONTENT_DISPOSITION, String.format("attachment; filename=%s", fileName))
+					.body(resource);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 }
