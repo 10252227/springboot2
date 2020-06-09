@@ -1,10 +1,13 @@
 package com.hqyj.SpringBootDemo.modules.test.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hqyj.SpringBootDemo.modules.test.entity.City;
 import com.hqyj.SpringBootDemo.modules.test.entity.Country;
@@ -26,6 +31,8 @@ import com.hqyj.SpringBootDemo.modules.test.vo.applicationTest;
 @Controller
 @RequestMapping("/test")
 public class TestController {
+	
+	private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 	
 	@Value("${com.test.name}")
 	private String name;
@@ -42,8 +49,6 @@ public class TestController {
 	private CityService cityService;
 	@Autowired
 	private CountryService countryService;
-	
-	private final static Logger LOGGER = LoggerFactory.getLogger(TestController.class);
 	
 	/**
 	 * 127.0.0.1/test/index
@@ -62,7 +67,7 @@ public class TestController {
 		modelMap.addAttribute("baiduUrl", "/test/log");
 		modelMap.addAttribute("city", cities.get(0));
 		modelMap.addAttribute("shopLogo", 
-				"http://cdn.duitang.com/uploads/item/201308/13/20130813115619_EJCWm.thumb.700_0.jpeg");
+				"/upload/1111.png");
 		modelMap.addAttribute("country", country);
 		modelMap.addAttribute("cities", cities);
 		modelMap.addAttribute("updateCityUri", "/api/city");
@@ -116,5 +121,59 @@ public class TestController {
 	public String testDesc(HttpServletRequest request, @RequestParam String key) {
 		String key2 = request.getParameter("key");
 		return "This is test module desc.112233" + key + "==" + key2;
+	}
+	
+	/**
+	 * 文件上传
+	 */
+	@PostMapping(value="/file",consumes="multipart/form-data")
+	public String uploadFile(@RequestParam MultipartFile file,RedirectAttributes redirectAttributes){
+		if (file.isEmpty()) {
+			redirectAttributes.addFlashAttribute("message","plase select file");
+			return "redirect:/test/index";
+		}
+		String resourcePath = "/upload/" + file.getOriginalFilename();
+		String destFilePath = "D:" + resourcePath;
+		try {
+//			String destFilePath = "D:\\upload\\"+file.getOriginalFilename();
+			File destFile = new File(destFilePath);
+			file.transferTo(destFile);
+		} catch (IllegalStateException  | IOException e) {
+			e.printStackTrace();
+			redirectAttributes.addFlashAttribute("message","Upload fail");
+			return "redirect:/test/index";
+		}
+		redirectAttributes.addFlashAttribute("resourcePath", resourcePath);
+		redirectAttributes.addFlashAttribute("message","Upload success");
+		return "redirect:/test/index";
+	}
+	
+	@PostMapping(value="/files" , consumes="multipart/form-data") 
+	public String uploadFiles(@RequestParam MultipartFile[] files,RedirectAttributes redirectAttributes){
+		boolean isEmpty = true;
+		for(MultipartFile file : files){
+			if (file.isEmpty()) {
+				continue;
+			}
+			
+			try {
+//				String destFilePath = "D:\\upload\\" + file.getOriginalFilename();
+				String destFilePath = "D:\\upload" + File.separator + file.getOriginalFilename();
+				File destFile = new File(destFilePath);
+				file.transferTo(destFile);
+				isEmpty = false;
+			} catch (IllegalStateException |IOException e) {
+				e.printStackTrace();
+				redirectAttributes.addFlashAttribute("message","UPload fail");
+				return "redirect:/test/index";
+			}
+		}
+		
+		if (isEmpty) {
+			redirectAttributes.addFlashAttribute("message","Please select file");
+		}else {
+			redirectAttributes.addFlashAttribute("message","upload success");
+		}
+		return "redirect:/test/index";
 	}
 }

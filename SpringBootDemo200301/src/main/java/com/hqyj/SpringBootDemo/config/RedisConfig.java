@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 @EnableCaching // 启用缓存，使用 Lettuce，自动注入配置的方式
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 public class RedisConfig extends CachingConfigurerSupport{
-	
+				
 	/**
 	 * config RedisTemplate<Object, Object>
 	 */
