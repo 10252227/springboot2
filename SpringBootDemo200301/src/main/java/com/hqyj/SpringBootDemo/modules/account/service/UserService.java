@@ -18,4 +18,8 @@ public interface UserService {
 	Result<User> updateUser(User user);
 	
 	Result<User> deleteUser(int userId);
+	
+	User getUserByUserName(String userName);
+	
+	Result<User> login(User user);
 }

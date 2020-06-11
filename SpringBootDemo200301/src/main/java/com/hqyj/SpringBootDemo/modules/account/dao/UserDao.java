@@ -25,7 +25,10 @@ public interface UserDao {
 	@Select("select * from user where user_name=#{userName} and password=#{password}")
 	User getUserByNameAndPass(@Param("userName") String userName,@Param("password") String password);
 	
-	@Insert("insert into user(user_name,password) values(#{userName},#{password})")
+	@Select("select * from user where user_name = #{userName}")
+	User getUserByUserName(String userName);
+	
+	@Insert("insert into user(user_name,password,create_date) values(#{userName},#{password},#{createDate})")
 	@Options(useGeneratedKeys=true,keyColumn="user_id" ,keyProperty="userId")
 	void insertUser(User user);
 	

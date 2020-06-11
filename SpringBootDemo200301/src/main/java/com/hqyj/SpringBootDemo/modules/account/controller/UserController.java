@@ -3,6 +3,8 @@ package com.hqyj.SpringBootDemo.modules.account.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,19 +18,23 @@ import com.hqyj.SpringBootDemo.modules.account.entity.User;
 import com.hqyj.SpringBootDemo.modules.account.service.UserService;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result;
 
-@RestController
-@RequestMapping("/account")
+@Controller
+@RequestMapping("/api")
 public class UserController {
 	
 	@Autowired
 	private UserService userService;
 	
 	/**
-	 * 127.0.0.1/account/allUser
+	 * 127.0.0.1/api/users
 	 */
-	@RequestMapping("allUser")
-	public List<User> getAllUser() {
-		return userService.getAllUser();
+	@RequestMapping("/users")
+	public String getAllUser(ModelMap modelMap) {
+		
+		//TODO
+		List<User> userList = userService.getAllUser();
+		modelMap.addAttribute("template", userList);
+		return "index";
 	}
 	
 	/**
@@ -49,11 +55,16 @@ public class UserController {
 	}
 	
 	/**
-	 * 127.0.0.1/account/addUser
+	 * 127.0.0.1/account/user
 	 */
-	@PostMapping(value="/addUser",consumes="application/json")
+	@PostMapping(value="/user",consumes="application/json")
 	public Result<User> insertUser(@RequestBody User user) {
 		return userService.insertUser(user);
+	}
+	
+	@PostMapping(value="/login",consumes="application/json")
+	public Result<User> login(@RequestBody User user) {
+		return userService.login(user);
 	}
 	
 	/**

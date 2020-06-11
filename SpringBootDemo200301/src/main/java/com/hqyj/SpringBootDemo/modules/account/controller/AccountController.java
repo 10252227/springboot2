@@ -11,4 +11,9 @@ public class AccountController {
 	public String loginPage(){
 		return "indexSimple";
 	}
+	
+	@RequestMapping("/register")
+	public String register(){
+		return "indexSimple";
+	}
 }
