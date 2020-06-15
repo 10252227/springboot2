@@ -24,6 +24,10 @@ public interface RoleDao {
 	@Options(useGeneratedKeys=true,keyColumn="role_id",keyProperty="roleId")
 	void insertRole(Role role);
 	
+	@Select("select * from role role left join user_role userRole "
+			+ "on role.role_id = userRole.role_id where userRole.user_id = #{userId}")
+	Role getRoleByUserId(int userId);
+	
 	@Update("update role set role_name = #{roleName}")
 	void updateRole(Role role);
 	

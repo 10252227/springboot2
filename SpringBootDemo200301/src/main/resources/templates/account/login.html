@@ -22,7 +22,7 @@
                         	lay-skin="primary" title="30天内自动登录" >30天内自动登录
 					</div>
 					<div style="text-align:center">
-						<a id="loginButton" class="btn btn-default submit" href="javascript:void(0);"  
+						<a id="loginButton" class="btn btn-default submit" href="/common/dashbord"  
 							>登 录</a>
 						<!-- <a class="reset_pass" href="#">忘记密码</a> -->
 					</div>
@@ -65,14 +65,14 @@ $(document).ready(function() {
 });
 
 function login() {
-	var code = $(".input-val").val();
+/* 	 var code = $(".input-val").val();
 	var num = show_num.join("");
 	if (code == "") {
 		layer.msg("Please input Verification Code.", {icon: 0});
 		return;
 	} else if (code != num) {
 		layer.msg("The input code is error", {icon: 0});
-		return;
+		return;  */
 	}
 
 	var user = {};
@@ -86,8 +86,8 @@ function login() {
 		data : JSON.stringify(user),
 		success : function (data) {
 			if (data.status == 200) {
-				layer.msg(data.message, {icon: 0});
-				//location.href = "/index";
+				//layer.msg(data.message, {icon: 0});
+				location.href = "/common/dashbord";
 			} else {
 				layer.msg(data.message, {icon: 0});
 			}

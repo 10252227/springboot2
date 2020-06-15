@@ -1,10 +1,6 @@
 package com.hqyj.SpringBootDemo.modules.account.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,11 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.hqyj.SpringBootDemo.modules.account.entity.User;
 import com.hqyj.SpringBootDemo.modules.account.service.UserService;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result;
+import com.hqyj.SpringBootDemo.modules.common.vo.SearchVo;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 public class UserController {
 	
@@ -28,17 +26,13 @@ public class UserController {
 	/**
 	 * 127.0.0.1/api/users
 	 */
-	@RequestMapping("/users")
-	public String getAllUser(ModelMap modelMap) {
-		
-		//TODO
-		List<User> userList = userService.getAllUser();
-		modelMap.addAttribute("template", userList);
-		return "index";
+	@PostMapping(value="/users",consumes="application/json")
+	public PageInfo<User> getUserBySearchVo(@RequestBody SearchVo searchVo) {
+		return userService.getUserBySearchVo(searchVo);
 	}
 	
 	/**
-	 * 127.0.0.1/account/user/1
+	 * 127.0.0.1/api/user/1
 	 */
 	@RequestMapping("/user/{userId}")
 	public User getUserByUserId(@PathVariable int userId) {
@@ -70,16 +64,16 @@ public class UserController {
 	/**
 	 *127.0.0.1/account/updateUser
 	 */
-	@PutMapping(value="updateUser",consumes="application/x-www-form-urlencoded")
-	public Result<User> updateUser(User user) {
+	@PutMapping(value="user",consumes="application/json")
+	public Result<User> updateUser(@RequestBody User user) {
 		return userService.updateUser(user);
 	}
 	
 	/**
-	 * 127.0.0.1/account/deleteUser/4
+	 * 127.0.0.1/account/user/4
 	 */
-	@DeleteMapping("/deleteUser/{userId}")
-	public Result<User> deleteUser(@PathVariable int userId) {
+	@DeleteMapping("/user/{userId}")
+	public Result<Object> deleteUser(@PathVariable int userId) {
 		return userService.deleteUser(userId);
 	}
 }

@@ -3,6 +3,7 @@ package com.hqyj.SpringBootDemo.modules.account.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,16 +17,16 @@ import com.hqyj.SpringBootDemo.modules.account.service.RoleService;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api")
 public class RoleController {
 	
 	@Autowired
 	private RoleService roleService;
 	
 	/**
-	 * 127.0.0.1/account/allRole
+	 * 127.0.0.1/account/roles
 	 */
-	@RequestMapping("/allRole")
+	@RequestMapping("/roles")
 	public List<Role> getAllRole() {
 		return roleService.getAllRole();
 	}
@@ -37,6 +38,8 @@ public class RoleController {
 	public Role getRoleByroleId(@PathVariable int roleId) {
 		return roleService.getRoleByroleId(roleId);
 	}
+	
+	
 	
 	/**
 	 *  127.0.0.1/account/addRole
