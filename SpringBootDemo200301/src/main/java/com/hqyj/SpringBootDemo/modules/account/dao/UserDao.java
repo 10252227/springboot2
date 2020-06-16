@@ -2,12 +2,12 @@ package com.hqyj.SpringBootDemo.modules.account.dao;
 
 import java.util.List;
 
+
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -20,8 +20,6 @@ import com.hqyj.SpringBootDemo.modules.common.vo.SearchVo;
 @Mapper
 public interface UserDao {
 	
-	@Select("select * from user")
-	List<User> getAllUser();
 	
 	@Select("select * from user where user_id=#{userId}")
 	@Results(id="userResult", value={
@@ -33,9 +31,6 @@ public interface UserDao {
 		})
 	User getUserByUserId(int userId);
 
-	@Select("select * from user where user_name=#{userName} and password=#{password}")
-	User getUserByNameAndPass(@Param("userName") String userName,@Param("password") String password);
-	
 	@Select("select * from user where user_name = #{userName}")
 	User getUserByUserName(String userName);
 	

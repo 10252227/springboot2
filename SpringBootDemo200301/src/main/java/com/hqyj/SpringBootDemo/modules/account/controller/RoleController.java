@@ -3,7 +3,6 @@ package com.hqyj.SpringBootDemo.modules.account.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
 import com.hqyj.SpringBootDemo.modules.account.entity.Role;
 import com.hqyj.SpringBootDemo.modules.account.service.RoleService;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result;
+import com.hqyj.SpringBootDemo.modules.common.vo.SearchVo;
 
 @RestController
 @RequestMapping("/api")
@@ -24,44 +25,36 @@ public class RoleController {
 	private RoleService roleService;
 	
 	/**
-	 * 127.0.0.1/account/roles
+	 * 127.0.0.1/api/roles
 	 */
 	@RequestMapping("/roles")
-	public List<Role> getAllRole() {
-		return roleService.getAllRole();
+	List<Role> getRoles() {
+		return roleService.getRoles();
 	}
 	
-	/**
-	 *  127.0.0.1/account/role/1
-	 */
-	@RequestMapping("/role/{roleId}")
-	public Role getRoleByroleId(@PathVariable int roleId) {
-		return roleService.getRoleByroleId(roleId);
+	@PostMapping(value = "/roles", consumes = "application/json")
+	public PageInfo<Role> getRoles(@RequestBody SearchVo searchVo) {
+		return roleService.getRoles(searchVo);
 	}
 	
-	
-	
-	/**
-	 *  127.0.0.1/account/addRole
-	 */
-	@PostMapping(value="/addRole",consumes="application/json")
+	@PostMapping(value = "/role", consumes = "application/json")
 	public Result<Role> insertRole(@RequestBody Role role) {
-		return roleService.insertRole(role);
+		return roleService.editRole(role);
 	}
 	
-	/**
-	 * 127.0.0.1/account/updateRole
-	 */
-	@PutMapping(value="updateRole",consumes="application/x-www-form-urlencoded")
-	public Result<Role> updateRole(Role role) {
-		return roleService.updateRole(role);
+	@PutMapping(value = "/role", consumes = "application/json")
+	public Result<Role> updateRole(@RequestBody Role role) {
+		return roleService.editRole(role);
 	}
 	
-	/**
-	 * 127.0.0.1/account/deleteRole/3
-	 */
-	@DeleteMapping("/deleteRole/{roleId}")
-	public Result<Role> deleteRole(@PathVariable int roleId) {
+	@RequestMapping("/role/{roleId}")
+	public Role getRole(@PathVariable int roleId) {
+		return roleService.getRoleById(roleId);
+	}
+	
+	@DeleteMapping("/role/{roleId}")
+	public Result<Role> deletRole(@PathVariable int roleId) {
 		return roleService.deleteRole(roleId);
 	}
+
 }

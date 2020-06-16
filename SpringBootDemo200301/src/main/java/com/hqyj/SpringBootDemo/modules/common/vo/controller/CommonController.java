@@ -11,4 +11,5 @@ public class CommonController {
 	public String dashbordPage(){
 		return "index";
 	}
+
 }
