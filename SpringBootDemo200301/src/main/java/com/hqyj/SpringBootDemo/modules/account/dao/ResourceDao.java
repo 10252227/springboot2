@@ -64,5 +64,9 @@ public interface ResourceDao {
 							+ "RoleDao.getRolesByResourceId"))
 		})
 	Resource getResourceById(int resourceId);
+	
+	@Select("select * from resource where permission = #{permission}")
+	Resource getResourceByPermission(String permission);
+
 }
 

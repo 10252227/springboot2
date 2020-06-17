@@ -1,6 +1,7 @@
 package com.hqyj.SpringBootDemo.modules.account.service.impl;
 
 import java.util.Collections;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hqyj.SpringBootDemo.modules.account.dao.RoleDao;
 import com.hqyj.SpringBootDemo.modules.account.entity.Role;
-import com.hqyj.SpringBootDemo.modules.account.entity.User;
 import com.hqyj.SpringBootDemo.modules.account.service.RoleService;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result.ResultStatus;

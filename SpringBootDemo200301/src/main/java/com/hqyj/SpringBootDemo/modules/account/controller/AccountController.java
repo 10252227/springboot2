@@ -34,4 +34,12 @@ public class AccountController {
 	public String rolesPage() {
 		return "index";
 	}
+	
+	/**
+	 * http://127.0.0.1/account/resource
+	 */
+	@RequestMapping("/resource")
+	public String resourcePage(){
+		return "index";
+	}
 }
