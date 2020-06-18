@@ -1,31 +1,28 @@
 package com.hqyj.SpringBootDemo.modules.account.service.impl;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.apache.ibatis.annotations.Options;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.hqyj.SpringBootDemo.modules.account.dao.RoleDao;
 import com.hqyj.SpringBootDemo.modules.account.dao.UserDao;
 import com.hqyj.SpringBootDemo.modules.account.dao.UserRoleDao;
 import com.hqyj.SpringBootDemo.modules.account.entity.Role;
 import com.hqyj.SpringBootDemo.modules.account.entity.User;
-import com.hqyj.SpringBootDemo.modules.account.entity.UserRole;
 import com.hqyj.SpringBootDemo.modules.account.service.UserService;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result;
 import com.hqyj.SpringBootDemo.modules.common.vo.Result.ResultStatus;
 import com.hqyj.SpringBootDemo.modules.common.vo.SearchVo;
 import com.hqyj.SpringBootDemo.utils.MD5Util;
-
-import net.bytebuddy.asm.Advice.Return;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -37,12 +34,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Result<User> login(User user) {
-		User userTemp = userDao.getUserByUserName(user.getUserName());
-		if (userTemp == null || !userTemp.getPassword().equals(MD5Util.getMD5(user.getPassword()))) {
-			return new Result<User>(ResultStatus.FAILD.status, "User name or password error.");
+//		User userTemp = userDao.getUserByUserName(user.getUserName());
+//		if (userTemp == null || !userTemp.getPassword().equals(MD5Util.getMD5(user.getPassword()))) {
+//			return new Result<User>(ResultStatus.FAILD.status, "User name or password error.");
+//		}
+		try {
+			Subject subject = SecurityUtils.getSubject();
+			UsernamePasswordToken usernamePasswordToken = 
+					new UsernamePasswordToken(user.getUserName(),MD5Util.getMD5(user.getPassword()));
+			usernamePasswordToken.setRememberMe(user.getRememberMe());
+			subject.login(usernamePasswordToken);
+			subject.checkRoles();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new Result<User>(ResultStatus.FAILD.status,"user name or password error");
 		}
-
-		return new Result<User>(ResultStatus.SUCCESS.status, "Login success.", userTemp);
+		
+		return new Result<User>(ResultStatus.SUCCESS.status, "Login success.", user);
 	}
 
 	@Override
@@ -92,6 +100,12 @@ public class UserServiceImpl implements UserService {
 		PageHelper.startPage(searchVo.getCurrentPage(), searchVo.getPageSize());
 		return new PageInfo<>(Optional.ofNullable(userDao.getUserBySearchVo(searchVo)).orElse(Collections.emptyList()));
 
+	}
+
+	@Override
+	public void logout() {
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
 	}
 
 }

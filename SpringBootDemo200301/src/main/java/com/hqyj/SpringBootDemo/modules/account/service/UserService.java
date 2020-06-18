@@ -18,4 +18,6 @@ public interface UserService {
 	Result<User> login(User user);
 
 	Result<User> editUser(User user);
+	
+	void logout();
 }

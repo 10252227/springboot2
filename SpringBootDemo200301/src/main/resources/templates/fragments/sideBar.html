@@ -25,7 +25,7 @@
 		<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 			<div class="menu_section">
 				<ul class="nav side-menu">
-					<li>
+					<li shiro:hasAnyRoles="admin,manager,staff">
 						<a href="/common/dashbord">
 							<i class="fa fa-dashboard"></i> Dashboard
 						</a>
@@ -35,12 +35,13 @@
 							<i class="fa fa-user"></i> Account <span class="fa fa-chevron-down"></span>
 						</a>
 						<ul class="nav child_menu">
-							<li><a href="/account/users">Users</a></li>
-							<li><a href="/account/roles">Roles</a></li>
-							<li><a href="/account/resource">Resources</a></li>
+							<li shiro:hasAnyRoles="admin,manager,staff"><a href="/account/profile">Profile</a></li>
+							<li shiro:hasAnyRoles="admin,manager"><a href="/account/users">Users</a></li>
+							<li  shiro:hasAnyRoles="admin,manager"><a href="/account/roles">Roles</a></li>
+							<li shiro:hasAnyRoles="admin,manager"><a href="/account/resource">Resources</a></li>
 						</ul>
 					</li>
-					<li>
+					<li shiro:hasAnyRoles="admin,manager,staff">
 						<a href="/test/index">
 							<i class="fa fa-dashboard"></i> Test
 						</a>
