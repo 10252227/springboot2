@@ -38,7 +38,7 @@ public class MyRealm extends AuthorizingRealm {
 		if (user == null) {
 			throw new UnknownAccountException("This user name do not exit.");
 		}
-		//身份验证器
+		// 身份验证器
 		return new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(), getName());
 	}
 
@@ -50,16 +50,16 @@ public class MyRealm extends AuthorizingRealm {
 		if (user == null) {
 			throw new UnknownAccountException("This user name do not exit.");
 		}
-		
+
 		List<Role> roles = roleService.getRolesByUserId(user.getUserId());
 		for (Role role : roles) {
 			simpleAuthorizationInfo.addRole(role.getRoleName());
 			List<Resource> resources = resourceService.getResourcesByRoleId(role.getRoleId());
 			for (Resource resource : resources) {
 				simpleAuthorizationInfo.addStringPermission(resource.getPermission());
-				
+
 			}
-			
+
 		}
 		return simpleAuthorizationInfo;
 	}

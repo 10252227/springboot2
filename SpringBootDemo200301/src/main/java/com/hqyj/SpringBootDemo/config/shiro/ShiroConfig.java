@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+
 @Configuration
 public class ShiroConfig {
 
@@ -51,7 +53,15 @@ public class ShiroConfig {
 
 		return shiroFilterFactoryBean;
 	}
-
+	
+	/**
+	 * 支持方言 thymeleaf
+	 */
+	@Bean
+	public ShiroDialect ShiroDialect(){
+		return new ShiroDialect();
+	}
+	
 	/**
 	 * 
 	 * 自动代理类，支持shiro注解
